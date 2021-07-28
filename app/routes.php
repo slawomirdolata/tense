@@ -1,15 +1,16 @@
 <?php
 declare(strict_types=1);
 
-use App\Application\Actions\User\ListUsersAction;
-use App\Application\Actions\User\ViewUserAction;
+//use App\Application\Actions\User\ListUsersAction;
+use App\Application\Actions\Termin\ListTerminsAction;
+//use App\Application\Actions\User\ViewUserAction;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\App;
 use Slim\Interfaces\RouteCollectorProxyInterface as Group;
 
 return function (App $app) {
-    $app->options('/{routes:.*}', function (Request $request, Response $response) {
+    /*$app->options('/{routes:.*}', function (Request $request, Response $response) {
         // CORS Pre-Flight OPTIONS Request Handler
         return $response;
     });
@@ -35,5 +36,13 @@ return function (App $app) {
         $payload = json_encode($data);
         $response->getBody()->write($payload);
         return $response->withHeader('Content-Type', 'application/json');
+    });*/
+
+    $app->group('/admin', function (Group $group) {
+        $group->get('', ListTerminsAction::class);
+        $group->get('/{id}', ViewTerminAction::class);
+        $group->post('/{id}', EditTerminAction::class);
+        $group->put('', AddTerminAction::class);
+        $group->delete('/{id}', DeleteTerminAction::class);
     });
 };
