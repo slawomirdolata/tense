@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Rezerwacja terminów TEST</title>
+
+        <style>
+            p > label {width: 210px; display: block; float: left; }
+        </style>
+
+        <script type="text/javascript">
+            function sendFormPut(data) {
+                const xhr = new XMLHttpRequest();
+                xhr.onreadystatechange = e => {
+                    if (xhr.readyState === 4 && xhr.status === 200) {
+                        showData(xhr);
+                        //alert('ok');
+                    }
+                };
+                xhr.open('PUT', '/api', true);
+                xhr.send(data);
+            }
+
+            document.addEventListener('DOMContentLoaded', function() {
+                let btn = document.getElementById('btnDodaj');
+                let form = document.getElementsByTagName('FORM');
+                let inputs = [form[0].getElementsByTagName('INPUT'), form[0].getElementsByTagName('TEXTAREA')];
+                let jsonData = {};
+
+                for (let t = 0; t < inputs.length; t++) {
+                    for (let n = 0, nl = inputs[t].length; n < nl; n++) {
+                        //if (inputs[t][n].type !== 'submit') {
+                            jsonData[inputs[t][n].name] = inputs[t][n].value;
+                        //}
+                    }
+                }
+
+                btn.addEventListener('click', function(event) {
+                    sendFormPut(JSON.stringify(jsonData));
+                    event.preventDefault();
+                });
+            });
+        </script>
+</head>
+<body>
+    <form action="/api/3" method="post">
+        <p><label for="txTytul">Tytuł:</label><input type="text" name="txTytul" id="txTytul"></p>
+        <p><label for="txStartDate">Data rozpoczęcia</label><input type="text" name="txStartDate" id="txStartDate"></p>
+        <p><label for="txEndDate">Data zakończenia</label><input type="text" name="txEndDate" id="txEndDate"></p>
+        <p><label for="txOpis">Opis</label><textarea name="txOpis" id="txOpis"></textarea></p>
+        <p><label for="txImieNazwiskoKlienta">Imię i nazwisko klienta</label><input type="text" name="txImieNazwiskoKlienta" id="txImieNazwiskoKlienta"></p>
+        <p><label for="txEmailKlienta">Email klienta</label><input type="text" name="txEmailKlienta" id="txEmailKlienta"></p>
+        <p><label for="txStatus">Status</label><input type="text" name="txStatus" id="txStatus"></p>
+        <p><input type="submit" value="Zapisz"></p>
+        <p><input type="submit" id="btnDodaj" value="Dodaj"></p>
+    </form>    
+</body>
+</html>

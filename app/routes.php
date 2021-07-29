@@ -3,7 +3,9 @@ declare(strict_types=1);
 
 //use App\Application\Actions\User\ListUsersAction;
 use App\Application\Actions\Termin\ListTerminsAction;
-//use App\Application\Actions\User\ViewUserAction;
+use App\Application\Actions\Termin\ViewTerminAction;
+use App\Application\Actions\Termin\EditTerminAction;
+use App\Application\Actions\Termin\AddTerminAction;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\App;
@@ -38,7 +40,17 @@ return function (App $app) {
         return $response->withHeader('Content-Type', 'application/json');
     });*/
 
-    $app->group('/admin', function (Group $group) {
+    $app->get('/admin', function (Request $request, Response $response) {
+        $file = 'public/admin.html';
+        if (file_exists($file)) {
+            $response->getBody()->write(file_get_contents($file));
+            return $response;
+        } else {
+            throw new \Slim\Exception\NotFoundException($request, $response);
+        }
+    });
+
+    $app->group('/api', function (Group $group) {
         $group->get('', ListTerminsAction::class);
         $group->get('/{id}', ViewTerminAction::class);
         $group->post('/{id}', EditTerminAction::class);
