@@ -15,8 +15,7 @@
                 const xhr = new XMLHttpRequest();
                 xhr.onreadystatechange = e => {
                     if (xhr.readyState === 4 && xhr.status === 200) {
-                        showData(xhr);
-                        //alert('ok');
+                        alert('ok');
                     }
                 };
                 xhr.open('PUT', '/api', true);
@@ -24,22 +23,23 @@
             }
 
             document.addEventListener('DOMContentLoaded', function() {
-                let btn = document.getElementById('btnDodaj');
-                let form = document.getElementsByTagName('FORM');
-                let inputs = [form[0].getElementsByTagName('INPUT'), form[0].getElementsByTagName('TEXTAREA')];
-                let jsonData = {};
+                let forms = document.getElementsByTagName('FORM');
+                forms[0].addEventListener('submit', function(event) {
+                    if (event.submitter.id === 'btnDodaj') {
+                        let inputs = [forms[0].getElementsByTagName('INPUT'), forms[0].getElementsByTagName('TEXTAREA')];
+                        let jsonData = {};
 
-                for (let t = 0; t < inputs.length; t++) {
-                    for (let n = 0, nl = inputs[t].length; n < nl; n++) {
-                        //if (inputs[t][n].type !== 'submit') {
-                            jsonData[inputs[t][n].name] = inputs[t][n].value;
-                        //}
+                        for (let t = 0; t < inputs.length; t++) {
+                            for (let n = 0, nl = inputs[t].length; n < nl; n++) {
+                                if (inputs[t][n].type !== 'submit') {
+                                    jsonData[inputs[t][n].name] = inputs[t][n].value;
+                                }
+                            }
+                        }
+
+                        sendFormPut(JSON.stringify(jsonData));
+                        event.preventDefault();
                     }
-                }
-
-                btn.addEventListener('click', function(event) {
-                    sendFormPut(JSON.stringify(jsonData));
-                    event.preventDefault();
                 });
             });
         </script>
@@ -53,8 +53,8 @@
         <p><label for="txImieNazwiskoKlienta">Imię i nazwisko klienta</label><input type="text" name="txImieNazwiskoKlienta" id="txImieNazwiskoKlienta"></p>
         <p><label for="txEmailKlienta">Email klienta</label><input type="text" name="txEmailKlienta" id="txEmailKlienta"></p>
         <p><label for="txStatus">Status</label><input type="text" name="txStatus" id="txStatus"></p>
-        <p><input type="submit" value="Zapisz"></p>
-        <p><input type="submit" id="btnDodaj" value="Dodaj"></p>
+        <p><input type="submit" id="btnZapisz" name="zapisz" value="Zapisz"></p>
+        <p><input type="submit" id="btnDodaj" name="zapisz" value="Dodaj"></p>
     </form>    
 </body>
 </html>

@@ -47,35 +47,35 @@ class Termin implements JsonSerializable
      */
     private $status;
 
-    /**
-     * @param int $id
-     * @param \DateTime|string $startDate
-     * @param \DateTime|string $endDate
-     * @param string $tytul
-     * @param string $opis
-     * @param string $imieNazwiskoKlienta
-     * @param string $emailKlienta
-     * @param int $status
-     */
-    public function __construct(
-        int $id,
-        $startDate,
-        $endDate,
-        ?string $tytul,
-        ?string $opis,
-        ?string $imieNazwiskoKlienta,
-        string $emailKlienta,
-        int $status
-    )
-    {
-        $this->id = $id;
-        $this->startDate = $this->stringToDateTime($startDate);
-        $this->endDate = $this->stringToDateTime($endDate);
-        $this->tytul = $tytul;
-        $this->imieNazwiskoKlienta = $imieNazwiskoKlienta;
-        $this->emailKlienta = $emailKlienta;
-        $this->status = $status;
-    }
+    // /**
+    //  * @param int $id
+    //  * @param \DateTime|string $startDate
+    //  * @param \DateTime|string $endDate
+    //  * @param string $tytul
+    //  * @param string $opis
+    //  * @param string $imieNazwiskoKlienta
+    //  * @param string $emailKlienta
+    //  * @param int $status
+    //  */
+    // public function __construct(
+    //     int $id,
+    //     $startDate,
+    //     $endDate,
+    //     ?string $tytul,
+    //     ?string $opis,
+    //     ?string $imieNazwiskoKlienta,
+    //     string $emailKlienta,
+    //     int $status
+    // )
+    // {
+    //     $this->id = $id;
+    //     $this->startDate = $this->stringToDateTime($startDate);
+    //     $this->endDate = $this->stringToDateTime($endDate);
+    //     $this->tytul = $tytul;
+    //     $this->imieNazwiskoKlienta = $imieNazwiskoKlienta;
+    //     $this->emailKlienta = $emailKlienta;
+    //     $this->status = $status;
+    // }
 
     private function stringToDateTime(string $inputDateTime) : \DateTime {
         if ($inputDateTime instanceof \DateTime) {
@@ -89,7 +89,7 @@ class Termin implements JsonSerializable
         }
     }
 
-    public function getId() : int {
+    public function getId() : ?int {
             return $this->id;
     }
 

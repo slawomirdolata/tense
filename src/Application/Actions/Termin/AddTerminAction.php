@@ -5,24 +5,25 @@ namespace App\Application\Actions\Termin;
 
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface;
-use App\Application\Actions\Termin;
+use App\Domain\Termin\Termin;
 
 class AddTerminAction extends TerminAction
 {
     public function __invoke(ServerRequestInterface $request, Response $response, array $args) : Response
     {
-        $data = /*(array)*/$request->getParsedBody();// Collect input from the HTTP request
-        print_r ($data); exit;
-       /* $termin = new Termin( $id,
-        $startDate,
-        $endDate,
-        ?string $tytul,
-        ?string $opis,
-        ?string $imieNazwiskoKlienta,
-        string $emailKlienta,
-        int $status); */
+        $data = $this->getFormData();
 
-        $this->terminRepository->updateTermin($termin);
+        $termin = new Termin();
+        $termin
+            ->setStartDate($data->txStartDate)
+            ->setEndDate($data->txEndDate)
+            ->setTytul($data->txTytul)
+            ->setOpis($data->txOpis)
+            ->setImieNazwiskoKlienta($data->txImieNazwiskoKlienta)
+            ->setEmailKlienta($data->txEmailKlienta)
+            ->setStatus(1);
+
+        $this->terminRepository->addTermin($termin);
 
         $response->getBody()->write((string)json_encode($termin->jsonSerialize()));  // Build the HTTP response
 

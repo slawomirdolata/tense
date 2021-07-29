@@ -25,6 +25,25 @@ class TerminRepository implements TerminRepositoryInterface
         $this->db = $db;
     }
 
+    private function getAllDataOfTermin(Termin $termin) : array
+    {
+        $returnArray = [
+            'startDate' => $termin->getStartDate()->format('Y-m-d H:i'),
+            'endDate' => $termin->getEndDate()->format('Y-m-d H:i'),
+            'tytul' => $termin->getTytul(),
+            'opis' => $termin->getOpis(),
+            'imieNazwiskoKlienta' => $termin->getImieNazwiskoKlienta(),
+            'emailKlienta' => $termin->getEmailKlienta(),
+            'status' => $termin->getStatus()
+        ];
+
+        if ($termin->getId() !== null) {
+            $returnArray['id'] = $termin->getId();
+        }
+
+        return $returnArray;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -49,16 +68,17 @@ class TerminRepository implements TerminRepositoryInterface
             throw new TerminNotFoundException();
         }
 
-        return new Termin(
-            (int)$record['id'],
-            $record['startDate'],
-            $record['endDate'],
-            $record['tytul'],
-            $record['opis'],
-            $record['imieNazwiskoKlienta'],
-            $record['emailKlienta'],
-            (int)$record['status']
-        );
+        $termin = new Termin();
+        $termin
+            ->setId((int)$record['id'])
+            ->setStartDate($record['startDate'])
+            ->setEndDate($record['endDate'])
+            ->setTytul($record['tytul'])
+            ->setOpis($record['opis'])
+            ->setImieNazwiskoKlienta($record['imieNazwiskoKlienta'])
+            ->setEmailKlienta($record['emailKlienta'])
+            ->setStatus((int)$record['status']);
+        return $termin;
     }
 
     public function updateTermin(Termin $termin) : self
@@ -73,19 +93,18 @@ class TerminRepository implements TerminRepositoryInterface
             status = :status
             WHERE id = :id');
 
-        $data = [
-            'id' => $termin->getId(),
-            'startDate' => $termin->getStartDate()->format('Y-m-d H:i'),
-            'endDate' => $termin->getEndDate()->format('Y-m-d H:i'),
-            'tytul' => $termin->getTytul(),
-            'opis' => $termin->getOpis(),
-            'imieNazwiskoKlienta' => $termin->getImieNazwiskoKlienta(),
-            'emailKlienta' => $termin->getEmailKlienta(),
-            'status' => $termin->getStatus()
-        ];
+        $sth->execute($this->getAllDataOfTermin($termin));
+        return $this;
+    }
 
-        $sth->execute($data);
+    public function addTermin(Termin $termin) : self
+    {
+        $sth = $this->db->prepare('INSERT INTO termins
+            (startDate, endDate, tytul, opis, imieNazwiskoKlienta, emailKlienta, status)
+            VALUES
+            (:startDate, :endDate, :tytul, :opis, :imieNazwiskoKlienta, :emailKlienta, :status)');
 
+        $sth->execute($this->getAllDataOfTermin($termin));
         return $this;
     }
 }
